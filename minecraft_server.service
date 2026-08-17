@@ -1,5 +1,5 @@
-# This systemd unit file is licensed under the MIT License.
-# See the full license text: https://github.com/SenseiDeElite/minecraft_server.service/blob/main/LICENSE
+# Copyright (c) 2026 Sensei <https://github.com/SenseiDeElite>
+# https://github.com/SenseiDeElite/minecraft_server.service/blob/main/LICENSE
  
 [Unit]
 Description=Minecraft Server

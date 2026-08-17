@@ -117,7 +117,7 @@ RestrictNamespaces=yes
 RemoveIPC=yes
 LockPersonality=yes
 
-# --- syscall / exec lockdown ---
+# --- syscall lockdown ---
 SystemCallArchitectures=native
 SystemCallFilter=@system-service
 SystemCallFilter=~@privileged @resources @mount @debug @cpu-emulation @obsolete @raw-io @reboot @swap @module

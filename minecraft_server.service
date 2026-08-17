@@ -1,0 +1,131 @@
+# This source code is licensed under the GNU General Public License v3.0 (GPL-3.0).
+# See the full license text: https://github.com/SenseiDeElite/agecord/blob/main/LICENSE
+ 
+[Unit]
+Description=Minecraft Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/lib/minecraft
+ExecStartPre=/bin/mkdir -p /var/lib/minecraft/tmp
+ExecStart=/usr/bin/java -Xmx4G \
+    -Djava.io.tmpdir=/var/lib/minecraft/tmp \
+    -Dio.netty.native.workdir=/var/lib/minecraft/tmp \
+    -Djna.tmpdir=/var/lib/minecraft/tmp \
+    --add-modules=jdk.incubator.vector \
+    -XX:+UseG1GC \
+    -XX:MaxGCPauseMillis=200 \
+    -XX:+UnlockExperimentalVMOptions \
+    -XX:+UnlockDiagnosticVMOptions \
+    -XX:+DisableExplicitGC \
+    -XX:+AlwaysPreTouch \
+    -XX:G1NewSizePercent=28 \
+    -XX:G1MaxNewSizePercent=50 \
+    -XX:G1HeapRegionSize=16M \
+    -XX:G1ReservePercent=15 \
+    -XX:G1MixedGCCountTarget=3 \
+    -XX:InitiatingHeapOccupancyPercent=20 \
+    -XX:G1MixedGCLiveThresholdPercent=90 \
+    -XX:SurvivorRatio=32 \
+    -XX:G1HeapWastePercent=5 \
+    -XX:+PerfDisableSharedMem \
+    -XX:G1SATBBufferEnqueueingThresholdPercent=30 \
+    -XX:G1ConcMarkStepDurationMillis=5 \
+    -XX:G1RSetUpdatingPauseTimePercent=0 \
+    -XX:-DontCompileHugeMethods \
+    -XX:MaxNodeLimit=240000 \
+    -XX:NodeLimitFudgeFactor=8000 \
+    -XX:ReservedCodeCacheSize=400M \
+    -XX:NonNMethodCodeHeapSize=12M \
+    -XX:ProfiledCodeHeapSize=194M \
+    -XX:NonProfiledCodeHeapSize=194M \
+    -XX:NmethodSweepActivity=1 \
+    -XX:+UseCriticalJavaThreadPriority \
+    -XX:AllocatePrefetchStyle=3 \
+    -XX:+UseTransparentHugePages \
+    -XX:LargePageSizeInBytes=2M \
+    -XX:+UseLargePages \
+    -XX:+UseStringDeduplication \
+    -XX:+UseAES \
+    -XX:+UseAESIntrinsics \
+    -XX:+UseFMA \
+    -XX:+UseLoopPredicate \
+    -XX:+RangeCheckElimination \
+    -XX:+OptimizeStringConcat \
+    -XX:+UseCompressedOops \
+    -XX:+UseThreadPriorities \
+    -XX:+OmitStackTraceInFastThrow \
+    -XX:+RewriteBytecodes \
+    -XX:+RewriteFrequentPairs \
+    -XX:+UseFPUForSpilling \
+    -XX:+UseFastStosb \
+    -XX:+UseNewLongLShift \
+    -XX:+UseVectorCmov \
+    -XX:+UseXMMForArrayCopy \
+    -XX:+UseXmmI2D \
+    -XX:+UseXmmI2F \
+    -XX:+UseXmmLoadAndClearUpper \
+    -XX:+UseXmmRegToRegMoveAll \
+    -XX:+EliminateLocks \
+    -XX:+DoEscapeAnalysis \
+    -XX:+AlignVector \
+    -XX:+OptimizeFill \
+    -XX:+EnableVectorSupport \
+    -XX:+UseCharacterCompareIntrinsics \
+    -XX:+UseCopySignIntrinsic \
+    -XX:+UseVectorStubs \
+    -XX:+UseFastJNIAccessors \
+    -XX:+UseInlineCaches \
+    -XX:+SegmentedCodeCache \
+    -XX:+UseCompactObjectHeaders \
+    -Djdk.nio.maxCachedBufferSize=262144 \
+    -jar jar nogui
+Restart=on-failure
+
+# --- identity ---
+DynamicUser=yes
+StateDirectory=minecraft
+CacheDirectory=minecraft
+LogsDirectory=minecraft
+UMask=0077
+
+# --- filesystem lockdown ---
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/minecraft
+ExecPaths=/var/lib/minecraft/tmp
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectProc=invisible
+ProcSubset=pid
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectKernelLogs=yes
+ProtectControlGroups=yes
+ProtectClock=yes
+ProtectHostname=yes
+
+# --- privilege lockdown ---
+NoNewPrivileges=yes
+PrivateUsers=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictSUIDSGID=yes
+RestrictRealtime=yes
+RestrictNamespaces=yes
+RemoveIPC=yes
+LockPersonality=yes
+
+# --- syscall / exec lockdown ---
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallFilter=~@privileged @resources @mount @debug @cpu-emulation @obsolete @raw-io @reboot @swap @module
+SystemCallFilter=~@ipc @keyring @pkey @sandbox @setuid
+SystemCallErrorNumber=EPERM
+
+# --- network lockdown ---
+RestrictAddressFamilies=AF_INET
+
+[Install]
+WantedBy=multi-user.target

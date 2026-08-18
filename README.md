@@ -20,7 +20,7 @@ A hardened `systemd` unit file for running a Minecraft server, combining strict 
 
 - A Linux distribution with [`systemd`](https://github.com/systemd/systemd).
 - [JRE (Java Runtime Environment)](https://openjdk.org/); can be headless.
-- A Minecraft server jar ([vanilla](https://www.minecraft.net/en-us/download/server), [Fabric](https://fabricmc.net/use/server/), etc. — not included)
+- A Minecraft server jar ([vanilla](https://www.minecraft.net/en-us/download/server), [Fabric](https://fabricmc.net/use/server/), etc. — not included).
 
 ## Installation
 
